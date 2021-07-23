@@ -1,5 +1,5 @@
 import { TextDocument, TextEdit } from 'vscode-languageserver-textdocument'
-import { window, workspace } from 'coc.nvim'
+import { Position, window, workspace } from 'coc.nvim'
 import { execTool } from './tools'
 import { FILLSTRUCT, GOPLAY } from '../binaries'
 import { URI } from 'vscode-uri'
@@ -8,10 +8,11 @@ import { URI } from 'vscode-uri'
 export async function fillStruct(document: TextDocument): Promise<void> {
     const fileName = URI.parse(document.uri).fsPath
     let args = []
+    let cursor = await window.getCursorPosition()
 
     args.push(
         "-file", fileName,
-        "-line", document.lineCount,
+        "-line", cursor.line ,
     )
 
     const input = fileArchive(fileName, document.getText())
@@ -47,4 +48,11 @@ async function execFillStruct(args: string[], input: string): Promise<TextEdit> 
 
 function fileArchive(fileName: string, fileContents: string): string {
     return fileName + '\n' + Buffer.byteLength(fileContents, 'utf8') + '\n' + fileContents
+}
+
+// https://github.com/golang/vscode-go/blob/master/src/util.ts#L84
+function byteOffsetAt(document: TextDocument, position: Position): string {
+    const offset = document.offsetAt(position)
+    const text = document.getText()
+    return Buffer.byteLength(text.substr(0, offset)).toString()
 }

@@ -227,7 +227,7 @@ async function registerFillStruct(context: ExtensionContext): Promise<void> {
     ),
     commands.registerCommand(
       "go.fillstruct",
-      async () => (await activeTextDocument())
+      async () => fillStruct(await activeTextDocument())
     )
   )
 }
