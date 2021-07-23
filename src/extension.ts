@@ -9,6 +9,7 @@ import { GOPLS } from './binaries'
 import { generateTestsAll, generateTestsExported, generateTestsFunction, toogleTests } from './utils/tests'
 import { openPlayground } from './utils/playground'
 import { generateImplStubs } from './utils/impl'
+import { fillStruct } from './utils/fillstruct'
 
 const restartConfigs = [
   'go.goplsArgs',
@@ -224,6 +225,10 @@ async function registerFillStruct(context: ExtensionContext): Promise<void> {
       "go.install.fillstruct",
       () => installFillStruct()
     ),
+    commands.registerCommand(
+      "go.fillstruct",
+      async () => (await activeTextDocument())
+    )
   )
 }
 
