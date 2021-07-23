@@ -4,7 +4,7 @@ import { LanguageClient, window } from 'coc.nvim'
 import { installGoBin, runGoTool } from './utils/tools'
 import checkLatestTag from './utils/checktag'
 
-import { GOMODIFYTAGS, GOPLAY, GOPLS, GOTESTS, IMPL, TOOLS } from './binaries'
+import { GOMODIFYTAGS, GOPLAY, GOPLS, GOTESTS, IMPL, TOOLS, FILLSTRUCT } from './binaries'
 import { compareVersions, isValidVersion } from './utils/versions'
 
 export async function version(): Promise<void> {
@@ -108,4 +108,8 @@ export async function installTools(): Promise<void> {
   for (const tool of TOOLS) {
     await installGoBin(tool, true)
   }
+}
+
+export async function installFillStruct(): Promise<void> {
+  await installGoBin(FILLSTRUCT, true)
 }
