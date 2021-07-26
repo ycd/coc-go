@@ -1,7 +1,7 @@
 import { ExtensionContext, LanguageClient, LanguageClientOptions, commands, services, window, workspace } from 'coc.nvim'
 import { ChildProcess, spawn } from 'child_process'
 import { commandExists, goBinPath, installGoBin } from './utils/tools'
-import { checkGopls, installGomodifytags, installGoplay, installGopls, installGotests, installImpl, installTools, version } from './commands'
+import { checkGopls, installFillStruct, installGomodifytags, installGoplay, installGopls, installGotests, installImpl, installTools, version } from './commands'
 import { addTags, clearTags, removeTags } from './utils/modify-tags'
 import { getConfig, setStoragePath } from './utils/config'
 import { activeTextDocument } from './editor'
@@ -9,6 +9,7 @@ import { GOPLS } from './binaries'
 import { generateTestsAll, generateTestsExported, generateTestsFunction, toogleTests } from './utils/tests'
 import { openPlayground } from './utils/playground'
 import { generateImplStubs } from './utils/impl'
+import { fillStruct } from './utils/fillstruct'
 
 const restartConfigs = [
   'go.goplsArgs',
@@ -33,6 +34,7 @@ export async function activate(context: ExtensionContext): Promise<void> {
   registerPlaygroud(context)
   registerGoImpl(context)
   registerTools(context)
+  registerFillStruct(context)
 }
 
 async function registerGeneral(context: ExtensionContext): Promise<void> {
@@ -213,6 +215,19 @@ async function registerPlaygroud(context: ExtensionContext): Promise<void> {
     commands.registerCommand(
       "go.playground",
       async () => openPlayground(await activeTextDocument())
+    )
+  )
+}
+
+async function registerFillStruct(context: ExtensionContext): Promise<void> {
+  context.subscriptions.push(
+    commands.registerCommand(
+      "go.install.fillstruct",
+      () => installFillStruct()
+    ),
+    commands.registerCommand(
+      "go.fillstruct",
+      async () => fillStruct(await activeTextDocument())
     )
   )
 }
